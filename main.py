@@ -29,10 +29,13 @@ class PublicStreamListener(StreamListener):
 
     def on_update(self, status):
         try:
-            if len(status.mentions) > int(os.environ['MEMTION_COUNT']) and status.account.acct.find('@') > 0 and status.account.followers_count == 0:
+            # メンション数が規定数より多く、かつ外部からの投稿の場合
+            if len(status.mentions) > int(os.environ['MEMTION_COUNT']) and status.account.acct.find('@') > 0:
                 statusID = status.id
                 account = status.account
-                report = self.client.report(account.id, status_ids=[statusID])
+
+                # スパムの通報(リモートサーバにも転送)を投げ、アカウントを停止させる
+                report = self.client.report(account.id, status_ids=[statusID], forward=True, category='spam')
                 self.client.admin_account_moderate(account.id, 'suspend', report_id=report.id)
 
         except Exception as e:
