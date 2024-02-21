@@ -1,3 +1,7 @@
+## License
+
+[AGPL License](https://opensource.org/licenses/AGPL).
+
 ## Original Author
 
 [rosylilly](https://github.com/rosylilly)
